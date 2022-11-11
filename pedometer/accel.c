@@ -86,16 +86,16 @@ void readRawData(int i2cFileDesc ){
          double mag = getMagnitude(xOut,yOut,zOut);
          int steps = getSteps(mag);
         
-        printf("num steps: %f \n", mag);
+        printf("magnitude: %f \n", mag);
         printf("num steps: %d \n", steps);
+        sleep(1);
 
-	     sleep(1);
 }
 
 
 int getSteps(double magnitude){
-    double threshold = 0.87;
-    if (magnitude < 0.87){
+    double threshold = 360.3;
+    if (magnitude > threshold){
         steps++;
     }
 
