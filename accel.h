@@ -26,4 +26,8 @@
 
 static unsigned char readI2cReg(int i2cFileDesc, unsigned char regAddr);
 static int initI2cBus(char* bus, int address);
+double getMagnitude(unsigned int x, unsigned int y, unsigned int z);
+double formatRawData( int data0, int data1);
+void readRawData(int i2cFileDesc );
+
 #endif

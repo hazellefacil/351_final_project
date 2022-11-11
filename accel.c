@@ -3,30 +3,10 @@
 #include "accel.h"
 
 int main(){
-     int i2cFileDesc = initI2cBus(I2CDRV_LINUX_BUS1, I2C_ACCEL_ADDRESS);
-     while(1) {
-	     unsigned int x0 = readI2cReg(i2cFileDesc,REG_DATAX0);
-	     unsigned int x1 = readI2cReg(i2cFileDesc,REG_DATAX1);
-
-	     unsigned int y0 = readI2cReg(i2cFileDesc,REG_DATAY0);
-	     unsigned int y1 = readI2cReg(i2cFileDesc,REG_DATAY1);
-
-	     unsigned int z0 = readI2cReg(i2cFileDesc,REG_DATAZ0);
-	     unsigned int z1 = readI2cReg(i2cFileDesc,REG_DATAZ1);
-
-
-         //sleep(1);
-	     
-/*
-	     printf("x0 %u \n",x0);
-	     printf("x1 %u \n",x1);
-	     printf("y0 %u \n",y0);
-	     printf("y1 %u \n",y1);
-	     printf("z0 %u \n",z0);
-	     printf("z1 %u \n",z1);
-	     sleep(1);
-*/
-
+     
+  int i2cFileDesc = initI2cBus(I2CDRV_LINUX_BUS1, I2C_ACCEL_ADDRESS);
+    while(1) {
+      readRawData(i2cFileDesc);
 	}
 }
 
@@ -74,6 +54,41 @@ double getMagnitude(unsigned int x, unsigned int y, unsigned int z){
          double magnitude = sqrt(sum);
          printf("magnitude: %f\n", magnitude);
         return magnitude; 
+}
+
+double formatRawData( int data0, int data1){
+
+    static double maxResolution = 256.00;
+    data1 = data1 << 8;
+    int dataOut = data0 + data1;
+
+    double data = (double) dataOut / maxResolution;
+    return data;
+}
+
+
+void readRawData(int i2cFileDesc ){
+    	 int x0 = readI2cReg(i2cFileDesc,REG_DATAX0);
+	     int x1 = readI2cReg(i2cFileDesc,REG_DATAX1);
+
+	     int y0 = readI2cReg(i2cFileDesc,REG_DATAY0);
+	     int y1 = readI2cReg(i2cFileDesc,REG_DATAY1);
+
+	     int z0 = readI2cReg(i2cFileDesc,REG_DATAZ0);
+	     int z1 = readI2cReg(i2cFileDesc,REG_DATAZ1);
+
+         
+         int xOut = formatRawData(x0,x1);
+         int yOut = formatRawData(x0,x1);
+         double zOut = formatRawData(z0,z1);
+         printf("format %f \n",zOut);
+         printf("z0 %d \n",z0);
+	     printf("z1 %d \n",z1);
+
+         double zdoub = zOut / 256.00;
+         printf("z1 %f \n",zdoub);
+
+	     sleep(1);
 }
 
 
