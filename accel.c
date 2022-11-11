@@ -2,6 +2,8 @@
 
 #include "accel.h"
 
+    static int steps = 0;
+
 int main(){
      
   int i2cFileDesc = initI2cBus(I2CDRV_LINUX_BUS1, I2C_ACCEL_ADDRESS);
@@ -42,7 +44,7 @@ static int initI2cBus(char* bus, int address)
 }
 
 
-double getMagnitude(unsigned int x, unsigned int y, unsigned int z){
+double getMagnitude(double x, double y, double z){
 
         static double power2 = 2;
 
@@ -52,7 +54,6 @@ double getMagnitude(unsigned int x, unsigned int y, unsigned int z){
 
          double sum = xSquared + ySquared + zSquared;
          double magnitude = sqrt(sum);
-         printf("magnitude: %f\n", magnitude);
         return magnitude; 
 }
 
@@ -81,14 +82,23 @@ void readRawData(int i2cFileDesc ){
          int xOut = formatRawData(x0,x1);
          int yOut = formatRawData(x0,x1);
          double zOut = formatRawData(z0,z1);
-         printf("format %f \n",zOut);
-         printf("z0 %d \n",z0);
-	     printf("z1 %d \n",z1);
 
-         double zdoub = zOut / 256.00;
-         printf("z1 %f \n",zdoub);
+         double mag = getMagnitude(xOut,yOut,zOut);
+         int steps = getSteps(mag);
+        
+        printf("num steps: %f \n", mag);
+        printf("num steps: %d \n", steps);
 
 	     sleep(1);
 }
 
+
+int getSteps(double magnitude){
+    double threshold = 0.87;
+    if (magnitude < 0.87){
+        steps++;
+    }
+
+    return steps;
+}   
 
