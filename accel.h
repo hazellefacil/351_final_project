@@ -22,6 +22,7 @@
 #include <sys/ioctl.h>
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
+#include <math.h>
 
 static unsigned char readI2cReg(int i2cFileDesc, unsigned char regAddr);
 static int initI2cBus(char* bus, int address);

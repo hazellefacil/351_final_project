@@ -13,8 +13,11 @@ int main(){
 
 	     unsigned int z0 = readI2cReg(i2cFileDesc,REG_DATAZ0);
 	     unsigned int z1 = readI2cReg(i2cFileDesc,REG_DATAZ1);
-	     
 
+
+         //sleep(1);
+	     
+/*
 	     printf("x0 %u \n",x0);
 	     printf("x1 %u \n",x1);
 	     printf("y0 %u \n",y0);
@@ -22,6 +25,8 @@ int main(){
 	     printf("z0 %u \n",z0);
 	     printf("z1 %u \n",z1);
 	     sleep(1);
+*/
+
 	}
 }
 
@@ -54,6 +59,21 @@ static int initI2cBus(char* bus, int address)
         exit(1);
     }
     return i2cFileDesc;
+}
+
+
+double getMagnitude(unsigned int x, unsigned int y, unsigned int z){
+
+        static double power2 = 2;
+
+        double xSquared = pow((double)x,power2);
+        double ySquared = pow((double)y,power2);
+        double zSquared = pow((double)z,power2);
+
+         double sum = xSquared + ySquared + zSquared;
+         double magnitude = sqrt(sum);
+         printf("magnitude: %f\n", magnitude);
+        return magnitude; 
 }
 
 
